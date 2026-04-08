@@ -1,9 +1,10 @@
-"use client"
-import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar';
-import Sidebar from './Sidebar';
-import Footer from './Footer';
-import LatestQuestions from '../sections/LatestQuestions';
+"use client";
+
+import React, { useEffect, useState } from "react";
+
+import Footer from "./Footer";
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -14,48 +15,43 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check for user's preference
-    const savedMode = localStorage.getItem('darkMode');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
+    const savedMode = localStorage.getItem("darkMode");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
     if (savedMode !== null) {
-      setDarkMode(savedMode === 'true');
-    } else if (prefersDark) {
-      setDarkMode(true);
+      setDarkMode(savedMode === "true");
+      return;
     }
+
+    setDarkMode(prefersDark);
   }, []);
 
   useEffect(() => {
-    // Apply dark mode class to html element
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    
-    // Save preference
-    localStorage.setItem('darkMode', darkMode.toString());
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", String(darkMode));
   }, [darkMode]);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 flex flex-col">
-      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <div className="flex flex-grow">
-        <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <main 
-          className={`flex-grow transition-all duration-300 pt-16 md:pt-20 ${
-            isSidebarOpen ? 'md:ml-64' : 'md:ml-20'
+    <div className="relative min-h-screen overflow-x-clip">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute left-[-10rem] top-[-6rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,_rgba(0,0,0,0.05),_transparent_68%)] blur-3xl dark:bg-[radial-gradient(circle,_rgba(255,255,255,0.05),_transparent_70%)]" />
+        <div className="absolute right-[-10rem] top-[18rem] h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,_rgba(0,0,0,0.045),_transparent_68%)] blur-3xl dark:bg-[radial-gradient(circle,_rgba(255,255,255,0.04),_transparent_68%)]" />
+      </div>
+
+      <Navbar darkMode={darkMode} toggleDarkMode={() => setDarkMode((current) => !current)} />
+
+      <div className="flex gap-5 px-4 pb-14 pt-28 md:px-6 lg:gap-6 lg:px-8 lg:pt-32">
+        <Sidebar
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={() => setIsSidebarOpen((current) => !current)}
+        />
+
+        <main
+          className={`min-w-0 flex-1 transition-[padding] duration-300 ${
+            isSidebarOpen ? "lg:pl-[15.5rem]" : "lg:pl-[5.5rem]"
           }`}
         >
-          {children}
+          <div className="w-full space-y-6">{children}</div>
           <Footer />
         </main>
       </div>

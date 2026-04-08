@@ -1,10 +1,10 @@
-import React from "react";
 import Link from "next/link";
+import React from "react";
 import { Models } from "appwrite";
-import slugify from "@/utils/slugify";
+
 import { avatars } from "@/models/client/config";
 import convertDateToRelativeTime from "@/utils/relativeTime";
-
+import slugify from "@/utils/slugify";
 
 interface LatestQuestionCardProps {
   ques: Models.Document & {
@@ -19,62 +19,88 @@ interface LatestQuestionCardProps {
 }
 
 const LatestQuestionCard: React.FC<LatestQuestionCardProps> = ({ ques }) => {
-return (
-  <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm hover:shadow-md transition-shadow p-6 border border-gray-100 dark:border-gray-800">
-    <div className="flex items-start justify-between">
-      <div className="flex-grow">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400">
-          <Link href={`/questions/${ques.$id}/${slugify(ques.title)}`}>{ques.title}</Link>
-        </h3>
-        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-          {ques.content}
-        </p>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {ques.tags.map((tag: string) => (
+  const cleanPreview = String(ques.content ?? "")
+    .replace(/[#_*`>|-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const preview =
+    cleanPreview.length > 170 ? `${cleanPreview.slice(0, 167)}...` : cleanPreview;
+
+  return (
+    <article className="glass-panel group rounded-[28px] p-5 transition duration-300 hover:-translate-y-1 hover:border-[var(--border-strong)] md:p-6">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0 flex-1">
+          <p className="mono-label text-[10px] text-[var(--soft)]">
+            Asked {convertDateToRelativeTime(new Date(ques.$createdAt))}
+          </p>
+
+          <h3 className="mt-3 text-2xl font-semibold tracking-[-0.05em] text-[var(--text)]">
             <Link
-              key={tag}
-              href={`/questions?tag=${tag}`}
-              className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-sm"
+              href={`/questions/${ques.$id}/${slugify(ques.title)}`}
+              className="transition-colors group-hover:text-[var(--accent)]"
             >
-              {tag}
+              {ques.title}
             </Link>
-          ))}
+          </h3>
+
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+            {preview || "Open the thread to read the full question and context."}
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            {ques.tags.map((tag: string) => (
+              <Link key={tag} href={`/questions?tag=${tag}`} className="chip">
+                {tag}
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-5 flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={avatars.getInitials(ques.author.name, 40, 40).href}
+              alt={ques.author.name}
+              className="h-10 w-10 rounded-full"
+            />
+            <div>
+              <Link
+                href={`/users/${ques.author.$id}/${slugify(ques.author.name)}`}
+                className="font-medium text-[var(--text)] transition-colors hover:text-[var(--accent)]"
+              >
+                {ques.author.name}
+              </Link>
+              <p className="text-sm text-[var(--muted)]">
+                {ques.author.reputation.toLocaleString()} reputation
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-2 sm:grid-cols-3 lg:w-[78px] lg:grid-cols-1">
+          <StatCard label="Votes" value={ques.totalVotes} />
+          <StatCard label="Answers" value={ques.totalAnswers} />
+          <StatCard label="Author rep" value={ques.author.reputation} />
         </div>
       </div>
+    </article>
+  );
+};
+
+type StatCardProps = {
+  label: string;
+  value: number;
+};
+
+const StatCard = ({ label, value }: StatCardProps) => {
+  return (
+    <div className="rounded-[18px] border border-[var(--border)] bg-[var(--surface-muted)] px-2.5 py-2">
+      <p className="mono-label text-[9px] leading-tight text-[var(--soft)]">{label}</p>
+      <p className="mt-1.5 text-base font-semibold tracking-[-0.05em] text-[var(--text)]">
+        {value.toLocaleString()}
+      </p>
     </div>
-    <div className="flex items-center justify-between text-sm">
-      <div className="flex items-center space-x-4">
-        <span className="text-gray-600 dark:text-gray-400">
-          {ques.totalVotes} votes
-        </span>
-        <span className="text-gray-600 dark:text-gray-400">
-          {ques.totalAnswers} answers
-        </span>
-      </div>
-      <div className="flex items-center">
-        <span className="text-gray-600 dark:text-gray-400 mr-2">
-          asked {convertDateToRelativeTime(new Date(ques.$createdAt))}
-        </span>
-        <div className="ml-auto flex items-center gap-1">
-          <picture>
-              <img
-                  src={avatars.getInitials(ques.author.name, 24, 24).href}
-                  alt={ques.author.name}
-                  className="rounded-lg"
-              />
-          </picture>
-          <Link
-              href={`/users/${ques.author.$id}/${slugify(ques.author.name)}`}
-              className="text-orange-500 hover:text-orange-600"
-          >
-              {ques.author.name}
-          </Link>
-          <strong>&quot;{ques.author.reputation}&quot;</strong>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+  );
 };
 
 export default LatestQuestionCard;

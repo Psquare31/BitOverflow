@@ -1,78 +1,79 @@
 "use client";
-import FeatureCardClientWrapper from './FeatureCardClientWrapper'; // client wrapper
-import { useAuthStore } from "@/store/Auth";
-import slugify from "@/utils/slugify"; // if you have a slugify util
 
+import { useAuthStore } from "@/store/Auth";
+import slugify from "@/utils/slugify";
+
+import FeatureCardClientWrapper from "./FeatureCardClientWrapper";
 
 export default function Features() {
   const { user } = useAuthStore();
+
   const features = [
     {
-      icon: 'Sparkles',
-      title: "Personalised Dashboard",
-      description: "View your questions, clubs, upcoming events, and activity stats — all tailored to your interests and involvement.",
-      link: user ? `/users/${user.$id}/${slugify(user.name)}` : "#",
-      linkText: "View Profile",
-      requireAuth: true
+      icon: "LayoutDashboard",
+      title: "Personal dashboard",
+      description:
+        "A student profile that feels like a living activity log, with your questions, reputation, and contributions in one place.",
+      link: user ? `/users/${user.$id}/${slugify(user.name)}` : "/register",
+      linkText: user ? "Open your profile" : "Create your profile",
     },
     {
-      icon: 'Code',
-      title: "Questions",
-      description: "Post detailed questions with images or code snippets, get real-time peer responses, and build a culture of collaborative learning.",
+      icon: "MessagesSquare",
+      title: "Discussion threads",
+      description:
+        "Browse problem-solving threads that stay readable, contextual, and much easier to revisit than campus chat apps.",
       link: "/questions",
-      linkText: "Explore Questions",
+      linkText: "Browse questions",
     },
     {
-      icon: 'HousePlus',
-      title: "Clubs",
-      description: "Explore a vibrant ecosystem of student clubs, follow updates, join discussions, and never miss an opportunity to get involved.",
+      icon: "Users",
+      title: "Clubs and circles",
+      description:
+        "Surface student communities in a format that helps newcomers understand where to go, who to follow, and what is active.",
       link: "/club",
-      linkText: "Explore Clubs",
+      linkText: "See clubs",
     },
     {
-      icon: 'Zap',
-      title: "Events",
-      description: "From tech talks to cultural fests, discover, bookmark, and RSVP to events that shape your college experience.",
+      icon: "CalendarRange",
+      title: "Event rhythm",
+      description:
+        "Discover events with more intention, so deadlines, announcements, and campus happenings stop feeling scattered.",
       link: "/events",
-      linkText: "View Upcoming Events",
+      linkText: "View events",
     },
     {
-      icon: 'MapPin',
-      title: "Remap",
-      description: "Interactive map guides you through departments, clubs, venues, and more.",
+      icon: "Compass",
+      title: "Remap integration",
+      description:
+        "Keep campus navigation close to the rest of the student experience instead of hiding it as a separate utility.",
       link: "https://re-maps.vercel.app/",
-      linkText: "Remaps – Campus Navigator",
+      linkText: "Open Remap",
     },
     {
-      icon: 'ChartNoAxesCombined',
-      title: "Leaderboard",
-      description: "Get noticed and earn credibility by rising through the ranks as you ask thoughtful questions, share answers.",
+      icon: "Trophy",
+      title: "Recognition loop",
+      description:
+        "Celebrate active contributors with a leaderboard that makes progress visible without overwhelming the experience.",
       link: "/leaderboard",
-      linkText: "See Top Contributors",
-    }
+      linkText: "See leaderboard",
+    },
   ];
 
-
-
-  
   return (
-    <section id="features" className="py-20 md:py-32 bg-white dark:bg-gray-950">
-      <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
-            Make connections!
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-          Explore, share, and thrive with your peers in one seamless community hub
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-          Connecting every club, event, and question on campus. 
-          </p>
-        </div>
-
-        <FeatureCardClientWrapper features={features} />
-
+    <section id="features" className="page-shell py-16 md:py-20">
+      <div className="mb-10 max-w-3xl space-y-4 md:mb-12">
+        <p className="mono-label">Platform overview</p>
+        <h2 className="section-title max-w-[12ch] text-[clamp(2rem,4vw,3.75rem)]">
+          Designed like a focused digital commons, not a cluttered portal.
+        </h2>
+        <p className="section-copy">
+          The reference site leaned on editorial hierarchy, warm surfaces, and quiet
+          motion. This section carries that same spirit into BitOverflow&apos;s core
+          product areas.
+        </p>
       </div>
+
+      <FeatureCardClientWrapper features={features} />
     </section>
   );
 }

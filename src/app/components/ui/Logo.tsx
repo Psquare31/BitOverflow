@@ -1,23 +1,28 @@
-import React from 'react';
-import Image from 'next/image';
+import Image from "next/image";
+import Link from "next/link";
 
-const Logo: React.FC = () => {
+const Logo = () => {
   return (
-    <div className="flex items-center space-x-2">
-      <div className="relative w-12 h-10 transform transition-transform hover:scale-110">
+    <Link href="/" className="flex items-center gap-3">
+      <div className="glass-panel flex h-12 w-12 items-center justify-center overflow-hidden rounded-[18px] border-white/50">
         <Image
           src="/logo.png"
-          alt="BitOverflow Logo"
-          fill
-          className="object-contain drop-shadow-xl rounded-[35%]"
+          alt="BitOverflow logo"
+          width={40}
+          height={40}
+          className="h-10 w-10 object-contain"
         />
       </div>
-      <span className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent drop-shadow-md dark:drop-shadow-lg">
-        BitOverflow
-      </span>
-    </div>
+      <div className="leading-none">
+        <span className="mono-label block text-[10px] text-[var(--soft)]">
+          Campus knowledge network
+        </span>
+        <span className="block text-xl font-extrabold tracking-[-0.05em] text-[var(--text)] sm:text-2xl">
+          BitOverflow
+        </span>
+      </div>
+    </Link>
   );
 };
 
 export default Logo;
-

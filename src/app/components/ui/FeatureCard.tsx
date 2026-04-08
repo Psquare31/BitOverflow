@@ -1,6 +1,6 @@
-import React from 'react';
-import { DivideIcon as LucideIcon } from 'lucide-react';
-import Link from 'next/link';
+import Link from "next/link";
+import React from "react";
+import { ArrowRight, DivideIcon as LucideIcon } from "lucide-react";
 
 type FeatureCardProps = {
   icon: typeof LucideIcon;
@@ -8,40 +8,44 @@ type FeatureCardProps = {
   description: string;
   link: string;
   linkText: string;
+  requireAuth?: boolean;
 };
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ icon: Icon, title, description, link, linkText }) => {
+const FeatureCard: React.FC<FeatureCardProps> = ({
+  icon: Icon,
+  title,
+  description,
+  link,
+  linkText,
+  requireAuth,
+}) => {
+  const isExternal = link.startsWith("http");
+
   return (
-    <div className="p-6 md:p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-800 h-full flex flex-col group">
-      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg w-fit mb-6 group-hover:bg-blue-100 dark:group-hover:bg-blue-800/20 transition-colors">
-        <Icon size={24} className="text-blue-600 dark:text-blue-400" />
+    <div className="glass-panel group flex h-full flex-col rounded-[28px] p-6 transition duration-300 hover:-translate-y-1 hover:border-[var(--border-strong)] md:p-7">
+      <div className="mb-5 flex items-start justify-between gap-3">
+        <span className="mono-label text-[10px] text-[var(--soft)]">
+          {requireAuth ? "Members area" : "Product block"}
+        </span>
+        <div className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-[var(--accent-soft)] text-[var(--accent)]">
+          <Icon size={20} />
+        </div>
       </div>
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+
+      <h3 className="text-2xl font-semibold tracking-[-0.05em] text-[var(--text)]">
         {title}
       </h3>
-      <p className="text-gray-600 dark:text-gray-300 flex-grow">
-        {description}
-      </p>
-      <div className="mt-6 flex items-center">
-        <Link 
+      <p className="mt-3 flex-1 text-[0.98rem] text-[var(--muted)]">{description}</p>
+
+      <div className="mt-6">
+        <Link
           href={link}
-          className="text-blue-600 dark:text-blue-400 font-medium flex items-center hover:underline"
+          target={isExternal ? "_blank" : undefined}
+          rel={isExternal ? "noreferrer" : undefined}
+          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--accent)] transition-transform group-hover:translate-x-0.5"
         >
-          {linkText}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor" 
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="ml-1 transform group-hover:translate-x-1 transition-transform"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
+          <span>{linkText}</span>
+          <ArrowRight size={16} />
         </Link>
       </div>
     </div>

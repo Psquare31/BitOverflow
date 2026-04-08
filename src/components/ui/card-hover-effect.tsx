@@ -35,7 +35,7 @@ export const HoverEffect = ({
           <AnimatePresence>
             {hoveredIndex === idx && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-slate-800/[0.8] block  rounded-3xl"
+                className="absolute inset-0 block h-full w-full rounded-3xl bg-black/6 dark:bg-white/8"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -51,17 +51,14 @@ export const HoverEffect = ({
           </AnimatePresence>
           
           <Card>
-            <div className="flex items-center">
+            <div className="flex items-center gap-3">
               {" "}
-              {/* Flex container */}
-              <CardTitle className="mr-2">{item.title}</CardTitle>{" "}
-              {/* Add margin to separate title from image */}
+              <CardTitle>{item.title}</CardTitle>{" "}
               <img
                 src={item.image}
                 alt="Club logo"
-                className="logo w-10 h-10 ml-10"
+                className="logo h-10 w-10 rounded-xl object-contain"
               />{" "}
-              {/* Logo size */}
             </div>
             <CardDescription>{item.description}</CardDescription>
           </Card>
@@ -81,7 +78,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-full w-full p-4 overflow-hidden bg-black border border-transparent dark:border-white/[0.2] group-hover:border-slate-700 relative z-20",
+        "glass-panel relative z-20 h-full w-full overflow-hidden rounded-[28px] p-4 group-hover:border-[var(--border-strong)]",
         className
       )}
     >
@@ -99,7 +96,7 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4", className)}>
+    <h4 className={cn("mt-4 font-bold tracking-wide text-[var(--text)]", className)}>
       {children}
     </h4>
   );
@@ -114,7 +111,7 @@ export const CardDescription = ({
   return (
     <p
       className={cn(
-        "mt-8 text-zinc-400 tracking-wide leading-relaxed text-sm",
+        "mt-8 text-sm leading-relaxed tracking-wide text-[var(--muted)]",
         className
       )}
     >

@@ -1,53 +1,67 @@
-// layout.tsx
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { cn } from "@/lib/utils";
-import ClientComponent from "./c"; // Import the client component
+import { IBM_Plex_Mono, Manrope } from "next/font/google";
 import { Suspense } from "react";
-import PageLoader from "./components/PageLoader"; // Import the loader component
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const inter = Inter({ subsets: ["latin"] });
+import { cn } from "@/lib/utils";
 
-export const metadata : Metadata= {
-  title: 'BitOverflow',
+import ClientComponent from "./c";
+import PageLoader from "./components/PageLoader";
+import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://bit-overflow.vercel.app"),
+  title: {
+    default: "BitOverflow",
+    template: "%s | BitOverflow",
+  },
   description:
-    'BitOverflow is the ultimate student platform for BIT Mesra – join discussions, explore clubs, events, and navigate campus all in one place.',
+    "BitOverflow is a student-first platform for BIT Mesra where questions, clubs, events, and campus discovery live in one place.",
   keywords: [
-    'BitOverflow',
-    'BIT Mesra community',
-    'BIT Mesra forum',
-    'BIT Mesra events',
-    'BIT Mesra clubs',
-    'BIT Mesra navigation',
-    'student platform BIT Mesra',
-    'Sumit Shekhar',
+    "BitOverflow",
+    "BIT Mesra community",
+    "BIT Mesra forum",
+    "BIT Mesra events",
+    "BIT Mesra clubs",
+    "student platform BIT Mesra",
+    "college community platform",
   ],
-  authors: [{ name: 'Sumit Shekhar' }],
-  creator: 'Sumit Shekhar',
+  authors: [{ name: "Sumit Shekhar" }, { name: "Pranav Prajyot" }],
+  creator: "BitOverflow",
   openGraph: {
-    title: 'BitOverflow Unite. Share. Discover.',
+    title: "BitOverflow",
     description:
-      'Connect with peers, ask questions, and share knowledge – all in one place. From forums and clubs to events and campus maps, BitOverflow is the ultimate community platform for BIT Mesra students.',
-    url: 'https://bit-overflow.vercel.app',
-    siteName: 'BitOverflow',
+      "A focused campus network for BIT Mesra students to ask better questions, stay close to clubs and events, and discover what matters on campus.",
+    url: "https://bit-overflow.vercel.app",
+    siteName: "BitOverflow",
     images: [
       {
-        url: '/bitoverflow_preview.png', // Replace with real image URL
+        url: "/bitoverflow_preview.png",
         width: 1200,
         height: 630,
-        alt: 'BitOverflow Platform Preview',
+        alt: "BitOverflow platform preview",
       },
     ],
-    type: 'website',
+    type: "website",
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'BitOverflow Unite. Share. Discover.',
-    description: 'Connect with peers, ask questions, and share knowledge – all in one place. From forums and clubs to events and campus maps, BitOverflow is the ultimate community platform for BIT Mesra students.',
-    images: ['/bitoverflow_preview.png'],
+    card: "summary_large_image",
+    title: "BitOverflow",
+    description:
+      "Ask questions, follow campus happenings, and stay connected with the BIT Mesra community.",
+    images: ["/bitoverflow_preview.png"],
   },
 };
 
@@ -57,21 +71,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-    <head>
-      <meta name="google-site-verification" content="lkm3vAuVAaNjtOxkw09hQEncIv4eMoE5rpWDkqcrK6I" />
-    </head>
-      
-      <body className={cn(inter.className, "dark:bg-black dark:text-white")}>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta
+          name="google-site-verification"
+          content="lkm3vAuVAaNjtOxkw09hQEncIv4eMoE5rpWDkqcrK6I"
+        />
+      </head>
+      <body
+        className={cn(
+          manrope.variable,
+          ibmPlexMono.variable,
+          "bg-[var(--bg)] text-[var(--text)] antialiased"
+        )}
+      >
         <Suspense fallback={<div>Loading...</div>}>
           <PageLoader />
-      </Suspense>
-        <ClientComponent>{children}</ClientComponent> {/* Use the client component */}
-        
-        <SpeedInsights/>
+        </Suspense>
+        <ClientComponent>{children}</ClientComponent>
+        <SpeedInsights />
         <Analytics />
       </body>
     </html>
   );
 }
-

@@ -24,7 +24,7 @@ const LabelInputContainer = ({
     return (
         <div
             className={cn(
-                "relative flex w-full flex-col space-y-2 overflow-hidden rounded-xl border border-white/20 bg-slate-950 p-4",
+                "glass-panel relative flex w-full flex-col space-y-2 overflow-hidden rounded-[24px] p-5",
                 className
             )}
         >
@@ -222,7 +222,7 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                     name="title"
                     placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
                     type="text"
-                    className="text-black"
+                    className="border-[var(--border)] bg-white/80 text-[var(--text)] placeholder:text-[var(--soft)] dark:bg-white/5"
                     value={formData.title}
                     onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 />
@@ -236,10 +236,15 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                         characters.
                     </small>
                 </Label>
-                <RTE
-                    value={formData.content}
-                    onChange={value => setFormData(prev => ({ ...prev, content: value || "" }))}
-                />
+                <div
+                    data-color-mode="light"
+                    className="[&_.w-md-editor]:!rounded-[18px] [&_.w-md-editor]:!border [&_.w-md-editor]:!border-[var(--border)] [&_.w-md-editor]:!bg-white/80 [&_.w-md-editor-text]:!text-[var(--text)] [&_.w-md-editor-toolbar]:!border-b-[var(--border)] [&_.w-md-editor-toolbar]:!bg-transparent [&_.w-md-editor-toolbar_button]:!text-[var(--muted)] [&_.wmde-markdown]:!bg-transparent [&_.wmde-markdown]:!text-[var(--text)] dark:[&_.w-md-editor]:!bg-white/5"
+                >
+                    <RTE
+                        value={formData.content}
+                        onChange={value => setFormData(prev => ({ ...prev, content: value || "" }))}
+                    />
+                </div>
             </LabelInputContainer>
             <LabelInputContainer>
                  <Label htmlFor="image">
@@ -253,7 +258,7 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                     id="image"
                     name="image"
                     accept="image/*"
-                    className="block w-full text-sm text-white bg-slate-600 file:mr-4 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 "
+                    className="block w-full rounded-xl border-[var(--border)] bg-white/80 text-sm text-[var(--text)] file:mr-4 file:rounded-full file:border-0 file:bg-[var(--accent-soft)] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-[var(--accent)] hover:file:bg-[var(--accent-soft)] dark:bg-white/5"
                     type="file"
                     onChange={handleImageChange}
                 />
@@ -274,14 +279,14 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                             id="tag"
                             name="tag"
                             placeholder="e.g. (java c objective-c)"
-                            className="text-black"
+                            className="border-[var(--border)] bg-white/80 text-[var(--text)] placeholder:text-[var(--soft)] dark:bg-white/5"
                             type="text"
                             value={tag}
                             onChange={e => setTag(() => e.target.value)}
                         />
                     </div>
                     <button
-                        className="relative shrink-0 rounded-full border border-slate-600 bg-slate-700 px-8 py-2 text-sm text-white transition duration-200 hover:shadow-2xl hover:shadow-white/[0.1]"
+                        className="paper-button paper-button-primary relative shrink-0 px-6 text-sm font-semibold"
                         type="button"
                         onClick={() => {
                             if (tag.length === 0) return;
@@ -292,18 +297,17 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                             setTag(() => "");
                         }}
                     >
-                        <div className="absolute inset-x-0 -top-px mx-auto h-px w-1/2 bg-gradient-to-r from-transparent via-teal-500 to-transparent shadow-2xl" />
                         <span className="relative z-20">Add</span>
                     </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {Array.from(formData.tags).map((tag, index) => (
                         <div key={index} className="flex items-center gap-2">
-                            <div className="group relative inline-block rounded-full bg-slate-800 p-px text-xs font-semibold leading-6 text-white no-underline shadow-2xl shadow-zinc-900">
+                            <div className="group relative inline-block rounded-full bg-[var(--accent-soft)] p-px text-xs font-semibold leading-6 text-[var(--accent)] no-underline">
                                 <span className="absolute inset-0 overflow-hidden rounded-full">
-                                    <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                                    <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(31,111,98,0.25)_0%,rgba(31,111,98,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                                 </span>
-                                <div className="relative z-10 flex items-center space-x-2 rounded-full bg-zinc-950 px-4 py-0.5 ring-1 ring-white/10">
+                                <div className="relative z-10 flex items-center space-x-2 rounded-full bg-white/90 px-4 py-0.5 ring-1 ring-black/5 dark:bg-black/30 dark:ring-white/10">
                                     <span>{tag}</span>
                                     <button
                                         onClick={() => {
@@ -319,14 +323,14 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                                         <IconX size={12} />
                                     </button>
                                 </div>
-                                <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40" />
+                                <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent transition-opacity duration-500 group-hover:opacity-40" />
                             </div>
                         </div>
                     ))}
                 </div>
             </LabelInputContainer>
             <button
-                className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+                className="paper-button paper-button-primary px-6 font-medium"
                 type="submit"
                 disabled={loading}
             >

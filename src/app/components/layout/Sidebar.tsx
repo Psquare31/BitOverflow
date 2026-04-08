@@ -1,65 +1,86 @@
 "use client";
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, Home, Layers, Users, Settings, HelpCircle, 
-        MessageCircleQuestion, Tag, Bell, Compass} from "lucide-react";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
+import {
+  Bell,
+  ChevronLeft,
+  ChevronRight,
+  Compass,
+  Home,
+  MessageCircleQuestion,
+  Tag,
+  Trophy,
+  Users,
+} from "lucide-react";
 
 type SidebarProps = {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
-  const [activeItem, setActiveItem] = useState("home");
+const sidebarItems = [
+  { id: "home", label: "Home", icon: Home, href: "/" },
+  { id: "questions", label: "Questions", icon: MessageCircleQuestion, href: "/questions" },
+  { id: "tags", label: "Tags", icon: Tag, href: "/questions" },
+  { id: "events", label: "Events", icon: Bell, href: "/events" },
+  { id: "clubs", label: "Clubs", icon: Users, href: "/club" },
+  { id: "leaderboard", label: "Leaderboard", icon: Trophy, href: "/leaderboard" },
+  { id: "remap", label: "Remap", icon: Compass, href: "https://re-maps.vercel.app/", external: true },
+];
 
-  const sidebarItems = [
-    { id: "home", label: "Home", icon: Home, href: "/" },
-    { id: "Questions", label: "Questions", icon: MessageCircleQuestion, href: "/questions" },
-    { id: "Tags", label: "Tags", icon: Tag, href: "/" },
-    { id: "Events", label: "Events", icon: Bell, href: "/events" },
-    { id: "Clubs", label: "Clubs", icon: Users, href: "/club" },
-    { id: "Campus Navigation", label: "Remap", icon: Compass, href: "https://re-maps.vercel.app/" },
-  ];
+const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
+  const pathname = usePathname();
 
   return (
-    <div className="relative">
-      <aside
-        className={`fixed top-0 left-0 h-[calc(100vh-4rem)] mt-16 bg-white dark:bg-gray-900 shadow-lg transform transition-all duration-300 ease-in-out z-40 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } ${isSidebarOpen ? "w-64" : "md:w-20"}`}
-      >
-        <div className="px-4 py-6">
-          <div className="flex flex-col space-y-4">
-            {sidebarItems.map((item) => (
+    <aside
+      className={`fixed left-4 top-[7.7rem] z-30 hidden h-[calc(100vh-9.2rem)] transition-all duration-300 md:left-6 lg:left-8 lg:block ${
+        isSidebarOpen ? "w-48" : "w-[68px]"
+      }`}
+    >
+      <div className="glass-panel flex h-full flex-col rounded-[30px] p-3">
+        <div className={`px-3 pb-4 pt-2 ${isSidebarOpen ? "block" : "hidden"}`}>
+          <p className="mono-label text-[10px] text-[var(--soft)]">Navigate</p>
+          <p className="mt-2 text-sm text-[var(--muted)]">
+            Campus tools, discussions, and live student spaces.
+          </p>
+        </div>
+
+        <nav className="flex flex-1 flex-col gap-2" aria-label="Sidebar">
+          {sidebarItems.map((item) => {
+            const active =
+              !item.external &&
+              (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
+
+            return (
               <Link
                 key={item.id}
                 href={item.href}
-                className={`flex items-center p-3 rounded-lg transition-colors ${
-                  activeItem === item.id
-                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noreferrer" : undefined}
+                className={`flex items-center gap-3 rounded-[20px] px-3 py-3 text-sm transition-colors ${
+                  active
+                    ? "bg-black/8 text-[var(--text)] dark:bg-white/12 dark:text-white"
+                    : "text-[var(--muted)] hover:bg-white/60 hover:text-[var(--text)] dark:hover:bg-white/5"
                 }`}
-                onClick={() => setActiveItem(item.id)}
               >
-                <item.icon size={20} />
-                <span className={`ml-3 ${!isSidebarOpen && "md:hidden"}`}>{item.label}</span>
+                <item.icon size={18} />
+                <span className={`${isSidebarOpen ? "block" : "hidden"}`}>{item.label}</span>
               </Link>
-            ))}
-          </div>
-        </div>
-      </aside>
+            );
+          })}
+        </nav>
 
-      {/* Toggle Button */}
-      <button
-        onClick={toggleSidebar}
-        className="hidden md:flex fixed bottom-8 left-0 z-50 bg-white dark:bg-gray-900 shadow-md p-2 rounded-r-lg transform transition-all duration-300 ease-in-out"
-        style={{
-          left: isSidebarOpen ? "15.5rem" : "4.5rem",
-        }}
-      >
-        {isSidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-      </button>
-    </div>
+        <button
+          onClick={toggleSidebar}
+          className="glass-panel mt-3 flex h-11 items-center justify-center gap-2 rounded-[20px] border border-[var(--border)] text-sm text-[var(--muted)] transition-colors hover:text-[var(--text)]"
+        >
+          {isSidebarOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+          <span className={`${isSidebarOpen ? "block" : "hidden"}`}>Collapse rail</span>
+        </button>
+      </div>
+    </aside>
   );
 };
 

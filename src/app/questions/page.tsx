@@ -79,7 +79,7 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
   );
 
   return (
-    <div className="container mx-auto px-4 pb-20 pt-36">
+    <div className="page-shell pb-20 pt-36">
       <div className="mb-10 flex items-center justify-between">
         <h1 className="text-3xl font-bold">All Questions</h1>
         <Link href="/questions/ask">
@@ -98,14 +98,14 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
           {search ? (
             <>
               {questions.total} {questions.total === 1 ? "result" : "results"}{" "}
-              found for "{search}"
+              found for &quot;{search}&quot;
             </>
           ) : (
             `${questions.total} questions`
           )}
         </p>
       </div>
-      <div className="mb-4 max-w-3xl space-y-6">
+      <div className="mb-4 w-full space-y-6">
         {questions.documents.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500 text-lg">
